@@ -66,6 +66,40 @@ app.get("/", (req, res) => {
   });
 });
 
+app.get("/productos/ordenados", async (req, res) => {
+  const { query } = req;
+  const { criterio } = query;
+
+  // Define allowed sorting criteria
+  const allowedCriteria = ["nombre","precio", "cantidad"];
+
+  if (!criterio || !allowedCriteria.includes(criterio)) {
+    return res.status(400).json({
+      ok: false,
+      msg: "El criterio de ordenación es requerido y debe ser uno de los siguientes: 'nombre', 'precio', 'cantidad'.",
+    });
+  }
+
+  try {
+    const productos = await objeto_producto.findAll({
+      order: [[criterio, "ASC"]],
+    });
+
+    res.status(200).json({
+      ok: true,
+      msg: "Productos obtenidos exitosamente.",
+      datos: productos,
+    });
+  } catch (error) {
+    console.error("Error al obtener los productos:", error);
+    res.status(500).json({
+      ok: false,
+      msg: "Error al obtener los productos.",
+      error: error.message,
+    });
+  }
+});
+
 app.get("/productos", async (req, res) => {
   try {
     const productos = await objeto_producto.findAll();
@@ -84,28 +118,6 @@ app.get("/productos", async (req, res) => {
 });
 
 //productos.sort (a.b) => a.datavalues.precio = b.datavalue.precio
-
-app.get("/productos/categoria/:categoria", async (req, res) => {
-  //Ejemplo producto/fideos
-  const { categoria } = req.params;
-  try {
-    const productos = await objeto_producto.findAll({
-      where: { categoria: categoria },
-    });
-
-    res.status(200).json({
-      ok: true,
-      msg: "Estos son los productos de esta categoria",
-      dato: productos,
-    });
-  } catch (error) {
-    res.status(500).json({
-      ok: false,
-      msg: "Error al obtener los productos de esta categoria",
-      error: error.message,
-    });
-  }
-});
 
 app.get("/productos/encontrar", async (req, res) => {
   //ejemplo producto/find?id=1
