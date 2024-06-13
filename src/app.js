@@ -3,7 +3,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const { Sequelize, DataTypes, where } = require("sequelize");
 
-//inicializamos nuestro servicio
+
 const app = express();
 const port = 3000;
 
@@ -13,12 +13,12 @@ app.use(cors());
 app.use(express.json());
 
 const sequelize = new Sequelize(
-  "test", //Nombre base de datos
-  "root", //Usuario base de datos
-  "", //Contraseña base de datos
+  "test", 
+  "root", 
+  "", 
   {
-    host: "localhost", //Servidor
-    dialect: "mysql", //Tipo de base de datos
+    host: "localhost", 
+    dialect: "mysql", 
   }
 );
 
